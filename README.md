@@ -289,7 +289,7 @@ export default Pokemon;
 </details>
 
 <p align="right">
-   <a href="https://edusouza-programmer.github.io/Trybe_Exercicio_12-1_Edu_Souza">
+   <a href="https://edusouza-programmer.github.io/exercise-pokedex-state">
     <img alt="Go index.html" src="https://img.shields.io/badge/Go-app_react-orange">
     </a>&nbsp;
     <a href="#clipboard-Sumário">
