@@ -123,27 +123,18 @@ export const PokemonsContext = createContext();
 
 export const PokemonProvider = ({ children }) => {
   const [pokemons, setPokemons] = useState(Pokemons);
-  const [indexPokemon, setIndexPokemon] = useState(0);
-  const [pokemonsTypes, setPokemonsTypes] = useState(typesOfPokemons());
-  const [dataPokemons, setDataPokemons] = useState(Pokemons);
+  const [data, setData] = useState({
+    indexPokemon: 0,
+    pokemonsTypes: typesOfPokemons(),
+    dataPokemons: Pokemons,
+  });
 
   return (
-    <PokemonsContext.Provider
-      value={{
-        pokemons,
-        setPokemons,
-        indexPokemon,
-        setIndexPokemon,
-        pokemonsTypes,
-        setPokemonsTypes,
-        dataPokemons,
-        setDataPokemons,
-      }}>
+    <PokemonsContext.Provider value={{ pokemons, setPokemons, data, setData }}>
       {children}
     </PokemonsContext.Provider>
   );
 };
-
 
 // Pokedex
 import React from 'react';
@@ -168,12 +159,16 @@ import { PokemonsContext } from './Contexts/PokemonsContext';
 import Pokemon from './Pokemon';
 
 function PokedexDisplay() {
-  const { pokemons, indexPokemon } = useContext(PokemonsContext);
+  const {
+    pokemons,
+    data: { indexPokemon },
+  } = useContext(PokemonsContext);
 
   return <Pokemon pokemon={pokemons[indexPokemon]} />;
 }
 
 export default PokedexDisplay;
+
 
 // PokedexControllers
 import React, { useContext } from 'react';
@@ -184,16 +179,21 @@ function PokedexControllers() {
   const {
     pokemons,
     setPokemons,
-    indexPokemon,
-    setIndexPokemon,
-    pokemonsTypes,
-    dataPokemons,
+    data: { indexPokemon, pokemonsTypes, dataPokemons },
+    setData,
   } = useContext(PokemonsContext);
+
+  const firstIndexPokemon = () => {
+    setData(prevState => ({
+      ...prevState,
+      indexPokemon: 0,
+    }));
+  };
 
   const filterPokemonByType = type => {
     const filtedPokemon = dataPokemons.filter(pokemon => pokemon.type === type);
     setPokemons(filtedPokemon);
-    setIndexPokemon(0);
+    firstIndexPokemon();
   };
 
   const populateButtonsWithTypes = () => {
@@ -201,8 +201,9 @@ function PokedexControllers() {
       return (
         <Button
           onClick={() => filterPokemonByType(type)}
-          className='buttonFilter'
-          key={type}>
+          className="buttonFilter"
+          key={type}
+        >
           {type}
         </Button>
       );
@@ -211,36 +212,44 @@ function PokedexControllers() {
 
   const getAllpokemons = () => {
     setPokemons(dataPokemons);
-    setIndexPokemon(0);
+    firstIndexPokemon();
   };
 
   const forwardPokemon = () => {
-    setIndexPokemon((indexPokemon + 1) % pokemons.length);
+    setData(prevState => ({
+      ...prevState,
+      indexPokemon: (indexPokemon + 1) % pokemons.length,
+    }));
   };
 
   const backwardPokemon = () => {
-    setIndexPokemon((indexPokemon - 1) % pokemons.length);
+    setData(prevState => ({
+      ...prevState,
+      indexPokemon: (indexPokemon - 1) % pokemons.length,
+    }));
   };
 
   return (
     <div>
-      <div className='conteiner-button-type'>
-        <Button onClick={getAllpokemons} className='buttonFilter'>
+      <div className="conteiner-button-type">
+        <Button onClick={getAllpokemons} className="buttonFilter">
           All
         </Button>
         {populateButtonsWithTypes()}
       </div>
-      <div className='conteiner-button-controller'>
+      <div className="conteiner-button-controller">
         <Button
           onClick={backwardPokemon}
-          className='buttonFilter'
-          disabled={indexPokemon <= 0}>
+          className="buttonFilter"
+          disabled={indexPokemon <= 0}
+        >
           back
         </Button>
         <Button
           onClick={forwardPokemon}
-          className='buttonFilter'
-          disabled={indexPokemon === pokemons.length - 1}>
+          className="buttonFilter"
+          disabled={indexPokemon === pokemons.length - 1}
+        >
           next
         </Button>
       </div>

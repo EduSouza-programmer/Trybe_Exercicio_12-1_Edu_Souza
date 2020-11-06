@@ -9,22 +9,14 @@ export const PokemonsContext = createContext();
 
 export const PokemonProvider = ({ children }) => {
   const [pokemons, setPokemons] = useState(Pokemons);
-  const [indexPokemon, setIndexPokemon] = useState(0);
-  const [pokemonsTypes, setPokemonsTypes] = useState(typesOfPokemons());
-  const [dataPokemons, setDataPokemons] = useState(Pokemons);
+  const [data, setData] = useState({
+    indexPokemon: 0,
+    pokemonsTypes: typesOfPokemons(),
+    dataPokemons: Pokemons,
+  });
 
   return (
-    <PokemonsContext.Provider
-      value={{
-        pokemons,
-        setPokemons,
-        indexPokemon,
-        setIndexPokemon,
-        pokemonsTypes,
-        setPokemonsTypes,
-        dataPokemons,
-        setDataPokemons,
-      }}>
+    <PokemonsContext.Provider value={{ pokemons, setPokemons, data, setData }}>
       {children}
     </PokemonsContext.Provider>
   );

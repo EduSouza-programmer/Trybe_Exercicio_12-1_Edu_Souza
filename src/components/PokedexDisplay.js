@@ -3,7 +3,10 @@ import { PokemonsContext } from './Contexts/PokemonsContext';
 import Pokemon from './Pokemon';
 
 function PokedexDisplay() {
-  const { pokemons, indexPokemon } = useContext(PokemonsContext);
+  const {
+    pokemons,
+    data: { indexPokemon },
+  } = useContext(PokemonsContext);
 
   return <Pokemon pokemon={pokemons[indexPokemon]} />;
 }
